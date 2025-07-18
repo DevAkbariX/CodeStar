@@ -7,10 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Interfaces\" />
-    <Folder Include="DTOs\" />
-    <Folder Include="Validators\" />
-    <Folder Include="Services\" />
+    <Folder Include="Services\Teacher\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CodeStar.Domain\CodeStar.Domain.csproj" />
   </ItemGroup>
 
 </Project>

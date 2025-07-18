@@ -21,13 +21,13 @@ namespace CodeStar.Infrastructure.Data
        public DbSet<TeacherCertification> TeacherCertifications { get; set; }
        public DbSet<TeacherResume> TeacherResumes { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-                optionsBuilder.UseSqlServer("Server=localhost;Database=CodeStarDb;Trusted_Connection=True;TrustServerCertificate=True;");
-            }
-        }
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //{
+        //    if (!optionsBuilder.IsConfigured)
+        //    {
+        //        optionsBuilder.UseSqlServer("Server=localhost;Database=CodeStarDb;Trusted_Connection=True;TrustServerCertificate=True;");
+        //    }
+        //}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

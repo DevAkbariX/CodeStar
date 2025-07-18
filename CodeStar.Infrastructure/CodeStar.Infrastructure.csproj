@@ -19,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CodeStar.Application\CodeStar.Application.csproj" />
     <ProjectReference Include="..\CodeStar.Domain\CodeStar.Domain.csproj" />
   </ItemGroup>
 
