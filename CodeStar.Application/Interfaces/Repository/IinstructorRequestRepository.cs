@@ -1,5 +1,4 @@
 ﻿using CodeStar.Application.Common;
-using CodeStar.Application.DTOs.User;
 using CodeStar.Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -9,9 +8,8 @@ using System.Threading.Tasks;
 
 namespace CodeStar.Application.Interfaces.Repository
 {
-    public interface IUserRepository
+    public interface IinstructorRequestRepository
     {
-        public Task<Result<bool>> InsertAsync(User user);
-        
+        public Task<Result<bool>> InsertAsync(InstructorRequest user);
     }
 }

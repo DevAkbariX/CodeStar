@@ -12,16 +12,15 @@ using System.Threading.Tasks;
 
 namespace CodeStar.Application.Services
 {
-    public class UserServices : IUserServices
+    public class instructorRequestService : IinstructorRequestService
     {
-        private readonly IUserRepository _repository;
-        public UserServices(IUserRepository repository)
+        private readonly IinstructorRequestRepository _repository;
+
+        public instructorRequestService(IinstructorRequestRepository repository)
         {
-            _repository = repository;
+          _repository = repository;
         }
-
-
-        public async Task<Result<bool>> UserInsert(UserInsertDTO dto)
+        public async Task<Result<bool>> SubmitRequestAsync(UserInsertDTO dto)
         {
             try
             {
@@ -32,7 +31,7 @@ namespace CodeStar.Application.Services
 
                 var password = AuthHelper.HashPassword(dto.Password);
 
-                var user = new User()
+                var user = new InstructorRequest()
                 {
                     Email = dto.Email,
                     FullName = dto.FullName,
@@ -40,9 +39,10 @@ namespace CodeStar.Application.Services
                     NationalCode = dto.NationalCode,
                     Password = password,
                     UserName = dto.UserName,
-                    Fk_RoleId = dto.Role
                 };
-                return await _repository.InsertAsync(user);
+                await _repository.InsertAsync(user);
+                return Result<bool>.SuccessResult(true, "درخواست ثبت شد");
+        
 
 
             }

@@ -13,7 +13,8 @@ namespace CodeStar.API.DI
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IUserServices, UserServices>();
-
+            services.AddScoped<IinstructorRequestService, instructorRequestService>();
+            services.AddScoped<IinstructorRequestRepository, InstructorRequestRepository>();
 
             return services;
         }

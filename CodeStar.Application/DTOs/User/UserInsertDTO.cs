@@ -14,6 +14,7 @@ namespace CodeStar.Application.DTOs.User
         public string Email { get; set; }
         public string Mobile { get; set; }
         public string NationalCode { get; set; }
+        public int Role { get; set; }
         public string? Profile { get; set; }
     }
 }

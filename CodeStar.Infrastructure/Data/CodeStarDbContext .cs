@@ -22,6 +22,7 @@ namespace CodeStar.Infrastructure.Data
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<Role> Master { get; set; }
+        public DbSet<InstructorRequest> Instructors { get; set; }
 
         //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         //{

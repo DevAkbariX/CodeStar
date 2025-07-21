@@ -20,8 +20,4 @@
     <ProjectReference Include="..\CodeStar.Infrastructure\CodeStar.Infrastructure.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
 </Project>

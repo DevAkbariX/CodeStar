@@ -1,9 +1,7 @@
 ﻿using CodeStar.Application.Common;
-using CodeStar.Application.DTOs.User;
 using CodeStar.Application.Interfaces.Repository;
 using CodeStar.Domain.Entities;
 using CodeStar.Infrastructure.Data;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,31 +10,30 @@ using System.Threading.Tasks;
 
 namespace CodeStar.Infrastructure.Repository
 {
-    public class UserRepository : IUserRepository
+    public class InstructorRequestRepository : IinstructorRequestRepository
     {
         private readonly CodeStarDbContext _context;
-        private readonly IRepository<User> _repository;
-        
+        private readonly IRepository<InstructorRequest> _repository;
 
-        public UserRepository(CodeStarDbContext context , IRepository<User> repository)
+
+        public InstructorRequestRepository(CodeStarDbContext context, IRepository<InstructorRequest> repository)
         {
             _context = context;
             _repository = repository;
         }
 
-        public async Task<Result<bool>> InsertAsync(User user)
+        public async Task<Result<bool>> InsertAsync(InstructorRequest user)
         {
             try
             {
-               await _repository.AddAsync(user);
+                await _repository.AddAsync(user);
                 return Result<bool>.SuccessResult(true, "Success Added");
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return Result<bool>.FailureResult("Failed to add user", new List<string> { ex.Message });
             }
         }
 
-        
     }
 }
