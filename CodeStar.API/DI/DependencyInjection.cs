@@ -1,0 +1,21 @@
+﻿using CodeStar.Application.Interfaces;
+using CodeStar.Application.Interfaces.Repository;
+using CodeStar.Application.Services;
+using CodeStar.Infrastructure.Repository;
+using CodeStar.Infrastructure.Utilities;
+
+namespace CodeStar.API.DI
+{
+    public static class DependencyInjection
+    {
+        public static IServiceCollection AddDependency(this IServiceCollection services)
+        {
+            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IUserServices, UserServices>();
+
+
+            return services;
+        }
+    }
+}

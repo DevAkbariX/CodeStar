@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CodeStar.Application.Interfaces
+namespace CodeStar.Application.Interfaces.Repository
 {
     public interface IRepository<T> where T : class
     {
@@ -13,5 +13,6 @@ namespace CodeStar.Application.Interfaces
         Task AddAsync(T entity);
         Task UpdateAsync(T entity);
         Task DeleteAsync(long id);
+
     }
 }

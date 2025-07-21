@@ -1,6 +1,6 @@
 
+using CodeStar.API.DI;
 using CodeStar.Application.Interfaces;
-using CodeStar.Application.Interfaces.Teacher;
 using CodeStar.Infrastructure.Data;
 using CodeStar.Infrastructure.Repository;
 using Microsoft.EntityFrameworkCore;
@@ -24,10 +24,7 @@ namespace CodeStar.API
                     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             #region DI
-            builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-            builder.Services.AddScoped<ITeacherRepository, TeacherRepository>();
-
-
+            builder.Services.AddDependency();
             #endregion
 
             var app = builder.Build();

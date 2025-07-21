@@ -1,4 +1,4 @@
-﻿using CodeStar.Application.Interfaces;
+﻿using CodeStar.Application.Interfaces.Repository;
 using CodeStar.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using System;
