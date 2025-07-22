@@ -24,6 +24,19 @@ namespace CodeStar.Infrastructure.Repository
             _repository = repository;
         }
 
+        public async Task<User?> GetByEmailAsync(string email)
+        {
+            try
+            {
+                var result = _context.Users.Where(c => c.Email == email).FirstOrDefault();
+                return  result;
+            }
+            catch(Exception ex)
+            {
+                return null;
+            }
+        }
+
         public async Task<Result<bool>> InsertAsync(User user)
         {
             try
@@ -37,6 +50,17 @@ namespace CodeStar.Infrastructure.Repository
             }
         }
 
-        
+        public async Task<Result<bool>> UpdateAsync(User user)
+        {
+            try
+            {
+                await _repository.UpdateAsync(user);
+                return Result<bool>.SuccessResult(true, "User updated successfully");
+            }
+            catch(Exception ex )
+            {
+                return  Result<bool>.FailureResult("Failed to Update user", new List<string> { ex.Message });
+            }
+        }
     }
 }

@@ -17,6 +17,11 @@ namespace CodeStar.Domain.Entities
         public string NationalCode { get; set; }
         public string? Profile { get;set; }
 
+        public bool IsEmailConfirmed { get; set; }
+        public string? EmailConfirmationToken { get; set; }
+        public DateTime? EmailTokenExpiration { get; set; }
+
+
         public int Fk_RoleId { get; set; }
         public Role Role { get; set; }
 
