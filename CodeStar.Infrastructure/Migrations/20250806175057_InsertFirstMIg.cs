@@ -8,20 +8,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace CodeStar.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class User : Migration
+    public partial class InsertFirstMIg : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "TeacherCertifications");
-
-            migrationBuilder.DropTable(
-                name: "TeacherResumes");
-
-            migrationBuilder.DropTable(
-                name: "Teachers");
-
             migrationBuilder.CreateTable(
                 name: "Roles",
                 columns: table => new
@@ -38,6 +29,43 @@ namespace CodeStar.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Instructors",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FullName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Mobile = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    NationalCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Profile = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    InstructorProfileSummary = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    HasPriorExperience = table.Column<bool>(type: "bit", nullable: false),
+                    YearsOfExperience = table.Column<int>(type: "int", nullable: false),
+                    RequestedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    RejectionReason = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ProcessedByAdminId = table.Column<int>(type: "int", nullable: true),
+                    ProcessedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsEmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
+                    EmailConfirmationToken = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    EmailTokenExpiration = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    FkRoleId = table.Column<int>(name: "Fk_RoleId", type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Instructors", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Instructors_Roles_Fk_RoleId",
+                        column: x => x.FkRoleId,
+                        principalTable: "Roles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
@@ -50,6 +78,9 @@ namespace CodeStar.Infrastructure.Migrations
                     Mobile = table.Column<string>(type: "nvarchar(11)", maxLength: 11, nullable: false),
                     NationalCode = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
                     Profile = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
+                    IsEmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
+                    EmailConfirmationToken = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    EmailTokenExpiration = table.Column<DateTime>(type: "datetime2", nullable: true),
                     FkRoleId = table.Column<int>(name: "Fk_RoleId", type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -64,32 +95,32 @@ namespace CodeStar.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Master",
+                name: "InstructorMedia",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     IntroductionVideo = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
-                    FkUserId = table.Column<long>(name: "Fk_UserId", type: "bigint", nullable: false)
+                    FkInstructorID = table.Column<long>(name: "Fk_InstructorID", type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Master", x => x.Id);
+                    table.PrimaryKey("PK_InstructorMedia", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Master_Users_Fk_UserId",
-                        column: x => x.FkUserId,
-                        principalTable: "Users",
+                        name: "FK_InstructorMedia_Instructors_Fk_InstructorID",
+                        column: x => x.FkInstructorID,
+                        principalTable: "Instructors",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "MasterCertifications",
+                name: "InstructorCertification",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    FKMasterId = table.Column<long>(name: "FK_MasterId", type: "bigint", nullable: false),
+                    FKInstructorMediaID = table.Column<long>(name: "FK_InstructorMediaID", type: "bigint", nullable: false),
                     CertificateName = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     Issuer = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
                     DateReceived = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -97,22 +128,22 @@ namespace CodeStar.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MasterCertifications", x => x.Id);
+                    table.PrimaryKey("PK_InstructorCertification", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_MasterCertifications_Master_FK_MasterId",
-                        column: x => x.FKMasterId,
-                        principalTable: "Master",
+                        name: "FK_InstructorCertification_InstructorMedia_FK_InstructorMediaID",
+                        column: x => x.FKInstructorMediaID,
+                        principalTable: "InstructorMedia",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "MasterResumes",
+                name: "InstructorResume",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    FKMasterID = table.Column<long>(name: "FK_MasterID", type: "bigint", nullable: false),
+                    FKInstructorMediaID = table.Column<long>(name: "FK_InstructorMediaID", type: "bigint", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     StartDate = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -120,11 +151,11 @@ namespace CodeStar.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MasterResumes", x => x.Id);
+                    table.PrimaryKey("PK_InstructorResume", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_MasterResumes_Master_FK_MasterID",
-                        column: x => x.FKMasterID,
-                        principalTable: "Master",
+                        name: "FK_InstructorResume_InstructorMedia_FK_InstructorMediaID",
+                        column: x => x.FKInstructorMediaID,
+                        principalTable: "InstructorMedia",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -141,20 +172,25 @@ namespace CodeStar.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Master_Fk_UserId",
-                table: "Master",
-                column: "Fk_UserId",
+                name: "IX_InstructorCertification_FK_InstructorMediaID",
+                table: "InstructorCertification",
+                column: "FK_InstructorMediaID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_InstructorMedia_Fk_InstructorID",
+                table: "InstructorMedia",
+                column: "Fk_InstructorID",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_MasterCertifications_FK_MasterId",
-                table: "MasterCertifications",
-                column: "FK_MasterId");
+                name: "IX_InstructorResume_FK_InstructorMediaID",
+                table: "InstructorResume",
+                column: "FK_InstructorMediaID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MasterResumes_FK_MasterID",
-                table: "MasterResumes",
-                column: "FK_MasterID");
+                name: "IX_Instructors_Fk_RoleId",
+                table: "Instructors",
+                column: "Fk_RoleId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_Fk_RoleId",
@@ -166,92 +202,22 @@ namespace CodeStar.Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "MasterCertifications");
+                name: "InstructorCertification");
 
             migrationBuilder.DropTable(
-                name: "MasterResumes");
-
-            migrationBuilder.DropTable(
-                name: "Master");
+                name: "InstructorResume");
 
             migrationBuilder.DropTable(
                 name: "Users");
 
             migrationBuilder.DropTable(
+                name: "InstructorMedia");
+
+            migrationBuilder.DropTable(
+                name: "Instructors");
+
+            migrationBuilder.DropTable(
                 name: "Roles");
-
-            migrationBuilder.CreateTable(
-                name: "Teachers",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FullName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Git = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Instagram = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Linkdin = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Teachers", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "TeacherCertifications",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    FKTeacherID = table.Column<int>(name: "FK_TeacherID", type: "int", nullable: false),
-                    CertificateName = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    DateReceived = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ExpiryDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Issuer = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TeacherCertifications", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_TeacherCertifications_Teachers_FK_TeacherID",
-                        column: x => x.FKTeacherID,
-                        principalTable: "Teachers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "TeacherResumes",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    FKTeacherID = table.Column<int>(name: "FK_TeacherID", type: "int", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    EndDate = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    StartDate = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TeacherResumes", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_TeacherResumes_Teachers_FK_TeacherID",
-                        column: x => x.FKTeacherID,
-                        principalTable: "Teachers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TeacherCertifications_FK_TeacherID",
-                table: "TeacherCertifications",
-                column: "FK_TeacherID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TeacherResumes_FK_TeacherID",
-                table: "TeacherResumes",
-                column: "FK_TeacherID");
         }
     }
 }

@@ -14,7 +14,7 @@ namespace CodeStar.API.Controllers
     {
         IUserServices _user;
         IinstructorRequestService _Ireq;
-        public UserController(IUserServices user , IinstructorRequestService Ireq)
+        public UserController(IUserServices user, IinstructorRequestService Ireq)
         {
             _user = user;
             _Ireq = Ireq;
@@ -24,28 +24,22 @@ namespace CodeStar.API.Controllers
         {
             try
             {
-                
-                if (dTO == null) 
+
+                if (dTO == null)
                 {
                     return BadRequest(Result<bool>.FailureResult("مشکل در ورودی ها !"));
                 }
-                if(dTO.Role == 2)
-                {
-                    var res = await _user.UserInsert(dTO);
 
-                    if (!res.Success)
-                    {
-                        return BadRequest(Result<bool>.FailureResult(res.Message, res.Errors));
-                    }
+                var res = await _user.UserInsert(dTO);
 
-                    return Ok(Result<bool>.SuccessResult(true, "کاربر با موفقیت اضافه شد"));
-                }
-                var result = await _Ireq.SubmitRequestAsync(dTO);
-                if (!result.Success)
+                if (!res.Success)
                 {
-                    return BadRequest(Result<bool>.FailureResult(result.Message, result.Errors));
+                    return BadRequest(Result<bool>.FailureResult(res.Message, res.Errors));
                 }
-                return Ok(Result<bool>.SuccessResult("درخواست جهت بررسی به ادمین ارجاع داده شد"));
+
+                return Ok(Result<bool>.SuccessResult(true, "کاربر با موفقیت اضافه شد"));
+
+
             }
             catch (Exception ex)
             {

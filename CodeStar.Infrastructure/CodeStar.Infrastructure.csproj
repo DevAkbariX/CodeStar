@@ -23,4 +23,8 @@
     <ProjectReference Include="..\CodeStar.Domain\CodeStar.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
 </Project>

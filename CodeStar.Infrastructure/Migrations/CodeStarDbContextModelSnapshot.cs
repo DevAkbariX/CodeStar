@@ -22,7 +22,7 @@ namespace CodeStar.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("CodeStar.Domain.Entities.InstructorRequest", b =>
+            modelBuilder.Entity("CodeStar.Domain.Entities.Instructor", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -34,9 +34,28 @@ namespace CodeStar.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("EmailConfirmationToken")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("EmailTokenExpiration")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Fk_RoleId")
+                        .HasColumnType("int");
+
                     b.Property<string>("FullName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("HasPriorExperience")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("InstructorProfileSummary")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsEmailConfirmed")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Mobile")
                         .IsRequired()
@@ -56,6 +75,12 @@ namespace CodeStar.Infrastructure.Migrations
                     b.Property<int?>("ProcessedByAdminId")
                         .HasColumnType("int");
 
+                    b.Property<string>("Profile")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RejectionReason")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("RequestedAt")
                         .HasColumnType("datetime2");
 
@@ -66,34 +91,17 @@ namespace CodeStar.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("YearsOfExperience")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("Fk_RoleId");
 
                     b.ToTable("Instructors");
                 });
 
-            modelBuilder.Entity("CodeStar.Domain.Entities.Master", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<long>("Fk_UserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<byte[]>("IntroductionVideo")
-                        .HasColumnType("varbinary(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Fk_UserId")
-                        .IsUnique();
-
-                    b.ToTable("Master");
-                });
-
-            modelBuilder.Entity("CodeStar.Domain.Entities.MasterCertification", b =>
+            modelBuilder.Entity("CodeStar.Domain.Entities.InstructorCertification", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -112,7 +120,7 @@ namespace CodeStar.Infrastructure.Migrations
                     b.Property<DateTime?>("ExpiryDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<long>("FK_MasterId")
+                    b.Property<long>("FK_InstructorMediaID")
                         .HasColumnType("bigint");
 
                     b.Property<string>("Issuer")
@@ -122,12 +130,34 @@ namespace CodeStar.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("FK_MasterId");
+                    b.HasIndex("FK_InstructorMediaID");
 
-                    b.ToTable("MasterCertifications");
+                    b.ToTable("InstructorCertification");
                 });
 
-            modelBuilder.Entity("CodeStar.Domain.Entities.MasterResume", b =>
+            modelBuilder.Entity("CodeStar.Domain.Entities.InstructorMedia", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<long>("Fk_InstructorID")
+                        .HasColumnType("bigint");
+
+                    b.Property<byte[]>("IntroductionVideo")
+                        .HasColumnType("varbinary(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Fk_InstructorID")
+                        .IsUnique();
+
+                    b.ToTable("InstructorMedia");
+                });
+
+            modelBuilder.Entity("CodeStar.Domain.Entities.InstructorResume", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -142,7 +172,7 @@ namespace CodeStar.Infrastructure.Migrations
                     b.Property<string>("EndDate")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long>("FK_MasterID")
+                    b.Property<long>("FK_InstructorMediaID")
                         .HasColumnType("bigint");
 
                     b.Property<string>("StartDate")
@@ -156,9 +186,9 @@ namespace CodeStar.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("FK_MasterID");
+                    b.HasIndex("FK_InstructorMediaID");
 
-                    b.ToTable("MasterResumes");
+                    b.ToTable("InstructorResume");
                 });
 
             modelBuilder.Entity("CodeStar.Domain.Entities.Role", b =>
@@ -277,37 +307,48 @@ namespace CodeStar.Infrastructure.Migrations
                     b.ToTable("Users", (string)null);
                 });
 
-            modelBuilder.Entity("CodeStar.Domain.Entities.Master", b =>
+            modelBuilder.Entity("CodeStar.Domain.Entities.Instructor", b =>
                 {
-                    b.HasOne("CodeStar.Domain.Entities.User", "User")
-                        .WithOne("Master")
-                        .HasForeignKey("CodeStar.Domain.Entities.Master", "Fk_UserId")
+                    b.HasOne("CodeStar.Domain.Entities.Role", "Role")
+                        .WithMany("Instructor")
+                        .HasForeignKey("Fk_RoleId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("User");
+                    b.Navigation("Role");
                 });
 
-            modelBuilder.Entity("CodeStar.Domain.Entities.MasterCertification", b =>
+            modelBuilder.Entity("CodeStar.Domain.Entities.InstructorCertification", b =>
                 {
-                    b.HasOne("CodeStar.Domain.Entities.Master", "Master")
+                    b.HasOne("CodeStar.Domain.Entities.InstructorMedia", "InstructorMedia")
                         .WithMany("Certifications")
-                        .HasForeignKey("FK_MasterId")
+                        .HasForeignKey("FK_InstructorMediaID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Master");
+                    b.Navigation("InstructorMedia");
                 });
 
-            modelBuilder.Entity("CodeStar.Domain.Entities.MasterResume", b =>
+            modelBuilder.Entity("CodeStar.Domain.Entities.InstructorMedia", b =>
                 {
-                    b.HasOne("CodeStar.Domain.Entities.Master", "Master")
-                        .WithMany("Resumes")
-                        .HasForeignKey("FK_MasterID")
+                    b.HasOne("CodeStar.Domain.Entities.Instructor", "Instructor")
+                        .WithOne("InstructorMedia")
+                        .HasForeignKey("CodeStar.Domain.Entities.InstructorMedia", "Fk_InstructorID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Master");
+                    b.Navigation("Instructor");
+                });
+
+            modelBuilder.Entity("CodeStar.Domain.Entities.InstructorResume", b =>
+                {
+                    b.HasOne("CodeStar.Domain.Entities.InstructorMedia", "InstructorMedia")
+                        .WithMany("Resumes")
+                        .HasForeignKey("FK_InstructorMediaID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("InstructorMedia");
                 });
 
             modelBuilder.Entity("CodeStar.Domain.Entities.User", b =>
@@ -321,7 +362,12 @@ namespace CodeStar.Infrastructure.Migrations
                     b.Navigation("Role");
                 });
 
-            modelBuilder.Entity("CodeStar.Domain.Entities.Master", b =>
+            modelBuilder.Entity("CodeStar.Domain.Entities.Instructor", b =>
+                {
+                    b.Navigation("InstructorMedia");
+                });
+
+            modelBuilder.Entity("CodeStar.Domain.Entities.InstructorMedia", b =>
                 {
                     b.Navigation("Certifications");
 
@@ -330,12 +376,9 @@ namespace CodeStar.Infrastructure.Migrations
 
             modelBuilder.Entity("CodeStar.Domain.Entities.Role", b =>
                 {
-                    b.Navigation("Users");
-                });
+                    b.Navigation("Instructor");
 
-            modelBuilder.Entity("CodeStar.Domain.Entities.User", b =>
-                {
-                    b.Navigation("Master");
+                    b.Navigation("Users");
                 });
 #pragma warning restore 612, 618
         }

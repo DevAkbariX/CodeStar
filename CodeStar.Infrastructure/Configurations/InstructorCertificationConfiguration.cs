@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace CodeStar.Infrastructure.Configurations
 {
-    public class MasterCertificationConfiguration : IEntityTypeConfiguration<MasterCertification>
+    public class InstructorCertificationConfiguration : IEntityTypeConfiguration<InstructorCertification>
     {
-        public void Configure(EntityTypeBuilder<MasterCertification> builder)
+        public void Configure(EntityTypeBuilder<InstructorCertification> builder)
         {
             builder.HasKey(tc => tc.Id);
 
@@ -28,9 +28,9 @@ namespace CodeStar.Infrastructure.Configurations
             builder.Property(tc => tc.ExpiryDate)
                    .IsRequired(false);
 
-            builder.HasOne(tc => tc.Master)
+            builder.HasOne(tc => tc.InstructorMedia)
                    .WithMany(t => t.Certifications)
-                   .HasForeignKey(tc => tc.FK_MasterId)
+                   .HasForeignKey(tc => tc.FK_InstructorMediaID)
                    .OnDelete(DeleteBehavior.Cascade);
         }
     }

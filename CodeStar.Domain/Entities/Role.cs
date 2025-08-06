@@ -14,5 +14,6 @@ namespace CodeStar.Domain.Entities
         public bool IsActived { get; set; }
 
         public ICollection<User> Users { get; set; }
+        public ICollection<Instructor> Instructor { get; set; }
     }
 }

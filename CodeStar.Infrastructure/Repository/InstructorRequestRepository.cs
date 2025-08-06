@@ -13,16 +13,16 @@ namespace CodeStar.Infrastructure.Repository
     public class InstructorRequestRepository : IinstructorRequestRepository
     {
         private readonly CodeStarDbContext _context;
-        private readonly IRepository<InstructorRequest> _repository;
+        private readonly IRepository<Instructor> _repository;
 
 
-        public InstructorRequestRepository(CodeStarDbContext context, IRepository<InstructorRequest> repository)
+        public InstructorRequestRepository(CodeStarDbContext context, IRepository<Instructor> repository)
         {
             _context = context;
             _repository = repository;
         }
 
-        public async Task<Result<bool>> InsertAsync(InstructorRequest user)
+        public async Task<Result<bool>> InsertAsync(Instructor user)
         {
             try
             {

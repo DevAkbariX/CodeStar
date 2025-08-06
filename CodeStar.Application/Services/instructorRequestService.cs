@@ -31,7 +31,7 @@ namespace CodeStar.Application.Services
 
                 var password = AuthHelper.HashPassword(dto.Password);
 
-                var user = new InstructorRequest()
+                var user = new Instructor()
                 {
                     Email = dto.Email,
                     FullName = dto.FullName,

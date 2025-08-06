@@ -17,12 +17,12 @@ namespace CodeStar.Infrastructure.Data
         }
         public CodeStarDbContext(DbContextOptions<CodeStarDbContext> options): base(options) { }
 
-       public DbSet<MasterCertification> MasterCertifications { get; set; }
-       public DbSet<MasterResume> MasterResumes { get; set; }
+       public DbSet<InstructorCertification> InstructorCertification { get; set; }
+       public DbSet<InstructorResume> InstructorResume { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
-        public DbSet<Role> Master { get; set; }
-        public DbSet<InstructorRequest> Instructors { get; set; }
+        public DbSet<InstructorMedia> InstructorMedia { get; set; }
+        public DbSet<Instructor> Instructors { get; set; }
 
         //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         //{
@@ -38,9 +38,10 @@ namespace CodeStar.Infrastructure.Data
 
             modelBuilder.ApplyConfiguration(new RoleConfiguration());
             modelBuilder.ApplyConfiguration(new UserConfiguration());
-            modelBuilder.ApplyConfiguration(new MasterConfiguration());
-            modelBuilder.ApplyConfiguration(new MasterResumeConfiguration());
-            modelBuilder.ApplyConfiguration(new MasterCertificationConfiguration());
+            modelBuilder.ApplyConfiguration(new InstructorMediaConfiguration());
+            modelBuilder.ApplyConfiguration(new InstructorConfiguration());
+            modelBuilder.ApplyConfiguration(new InstructorResumeConfiguration());
+            modelBuilder.ApplyConfiguration(new InstructorCertificationConfiguration());
 
         }
     }

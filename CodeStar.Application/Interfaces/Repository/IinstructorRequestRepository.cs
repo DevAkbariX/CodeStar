@@ -10,6 +10,6 @@ namespace CodeStar.Application.Interfaces.Repository
 {
     public interface IinstructorRequestRepository
     {
-        public Task<Result<bool>> InsertAsync(InstructorRequest user);
+        public Task<Result<bool>> InsertAsync(Instructor user);
     }
 }

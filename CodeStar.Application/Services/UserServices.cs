@@ -88,7 +88,7 @@ namespace CodeStar.Application.Services
                     NationalCode = dto.NationalCode,
                     Password = password,
                     UserName = dto.UserName,
-                    Fk_RoleId = dto.Role,
+                    Fk_RoleId = 1,
                     EmailConfirmationToken = token,
                     EmailTokenExpiration = DateTime.UtcNow.AddHours(24)
                 };
