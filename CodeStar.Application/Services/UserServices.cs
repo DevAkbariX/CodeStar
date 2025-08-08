@@ -41,7 +41,6 @@ namespace CodeStar.Application.Services
 
             return Result<bool>.SuccessResult(true, "ایمیل تأیید شد");
         }
-
         public async Task<Result<bool>> SendEmailConfirmationAsync(string email)
         {
             var userResult = await _repository.GetByEmailAsync(email);

@@ -1,5 +1,6 @@
 ﻿using CodeStar.Application.Common;
 using CodeStar.Application.DTOs.User;
+using CodeStar.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;

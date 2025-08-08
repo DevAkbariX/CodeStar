@@ -36,7 +36,6 @@ namespace CodeStar.Infrastructure.Repository
                 return null;
             }
         }
-
         public async Task<Result<bool>> InsertAsync(User user)
         {
             try

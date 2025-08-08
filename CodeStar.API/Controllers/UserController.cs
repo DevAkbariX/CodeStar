@@ -46,7 +46,5 @@ namespace CodeStar.API.Controllers
                 return StatusCode(500, Result<bool>.FailureResult("خطای سرور", new List<string> { ex.Message }));
             }
         }
-
-
     }
 }
