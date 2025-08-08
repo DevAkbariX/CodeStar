@@ -30,8 +30,11 @@ namespace CodeStar.Domain.Entities
         public string? EmailConfirmationToken { get; set; }
         public DateTime? EmailTokenExpiration { get; set; }
 
+        #region Rel
         public InstructorMedia? InstructorMedia { get; set; }
+        public ICollection<SkillSpark> SkillSparks { get; set; }
         public int Fk_RoleId { get; set; }
         public Role Role { get; set; }
+        #endregion
     }
 }
