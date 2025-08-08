@@ -37,6 +37,19 @@ namespace CodeStar.Infrastructure.Repository
             }
         }
 
+        public async Task<User?> GetByIdAsync(int id)
+        {
+            try
+            {
+                var result = _context.Users.Where(c => c.Id == id).FirstOrDefault();
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
         public async Task<Result<bool>> InsertAsync(User user)
         {
             try
@@ -60,6 +73,20 @@ namespace CodeStar.Infrastructure.Repository
             catch(Exception ex )
             {
                 return  Result<bool>.FailureResult("Failed to Update user", new List<string> { ex.Message });
+            }
+        }
+
+         async Task<Result<bool>> IUserRepository.DeleteAsync(int id)
+        {
+            try
+            {
+                var result = _context.Users.Where(c => c.Id == id).FirstOrDefault();
+                await _repository.DeleteAsync(id);
+                return Result<bool>.SuccessResult(true, "User deleted successfully");
+            }
+            catch (Exception ex)
+            {
+                return null;
             }
         }
     }

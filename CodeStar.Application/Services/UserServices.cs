@@ -42,6 +42,35 @@ namespace CodeStar.Application.Services
             return Result<bool>.SuccessResult(true, "ایمیل تأیید شد");
         }
 
+        public async Task<Result<bool>> DeleteUser(int Id)
+        {
+            try
+            {
+                if (Id <= 0)
+                    return Result<bool>.FailureResult(" نامعتبر .");
+
+                var user = await _repository.GetByIdAsync(Id);
+                if (user == null)
+                    return Result<bool>.FailureResult("کاربر یافت نشد.");
+
+                var result = await _repository.DeleteAsync(Id);
+
+                if (!result.Success)
+                    return Result<bool>.FailureResult(result.Message, result.Errors);
+
+                return Result<bool>.SuccessResult(true, "کاربر با موفقیت حذف شد.");
+            }
+            catch (Exception ex)
+            {
+                return Result<bool>.FailureResult("خطای سرور: " + ex.Message);
+            }
+        }
+
+        //public Task<Result<GetUserDetailDTO>> GetUserDetail(int Id)
+        //{
+        //    throw new NotImplementedException();
+        //}
+
         public async Task<Result<bool>> SendEmailConfirmationAsync(string email)
         {
             var userResult = await _repository.GetByEmailAsync(email);
@@ -67,7 +96,58 @@ namespace CodeStar.Application.Services
 
             return Result<bool>.SuccessResult(true, "لینک تأیید به ایمیل شما ارسال شد.");
         }
-        public async Task<Result<bool>> UserInsert(UserInsertDTO dto)
+
+        public async Task<Result<UserUpdateDTO>> UpdateUser(int Id, UserUpdateDTO dto)
+        {
+            try
+            {
+                if (dto == null || Id <= 0)
+                    return Result<UserUpdateDTO>.FailureResult("ورودی خالی یا اشتباه است");
+
+
+                var user = await _repository.GetByIdAsync(Id);
+                if (user == null)
+                {
+                    return Result<UserUpdateDTO>.FailureResult("کاربر یافت نشد");
+                }
+                
+                user.FullName = dto.FullName;
+                user.Email = dto.Email;
+                user.Mobile = dto.Mobile;
+                user.NationalCode = dto.NationalCode;
+                user.UserName = dto.UserName;
+
+                if (!string.IsNullOrEmpty(dto.Password))
+                {
+                    user.Password = AuthHelper.HashPassword(dto.Password);
+                }
+
+                var updateResult = await _repository.UpdateAsync(user);
+
+                if (!updateResult.Success)
+                    return Result<UserUpdateDTO>.FailureResult(updateResult.Message, updateResult.Errors);
+
+                
+                var updatedDto = new UserUpdateDTO
+                {
+                    FullName = user.FullName,
+                    Email = user.Email,
+                    Mobile = user.Mobile,
+                    NationalCode = user.NationalCode,
+                    UserName = user.UserName,
+                    
+                };
+
+                return Result<UserUpdateDTO>.SuccessResult(updatedDto, "کاربر با موفقیت به‌روزرسانی شد");
+            }
+            catch (Exception ex)
+            {
+                return Result<UserUpdateDTO>.FailureResult("خطای سرور: " + ex.Message);
+
+            }
+        }
+
+            public async Task<Result<bool>> UserInsert(UserInsertDTO dto)
         {
             try
             {
