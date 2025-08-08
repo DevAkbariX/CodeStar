@@ -20,7 +20,10 @@ namespace CodeStar.Domain.Entities
         public string? EmailConfirmationToken { get; set; }
         public DateTime? EmailTokenExpiration { get; set; }
 
+        #region user
         public int Fk_RoleId { get; set; }
         public Role Role { get; set; }
+        public ICollection<SkillQuestion> SkillQuestions { get; set; }
+        #endregion
     }
 }
