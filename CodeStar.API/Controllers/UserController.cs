@@ -48,7 +48,7 @@ namespace CodeStar.API.Controllers
             }
         }
         [HttpDelete("{Id}")]
-        public async Task<IActionResult> DeleteUser(int Id)
+        public async Task<IActionResult> DeleteUser(long Id)
         {
             try
             {
@@ -56,7 +56,7 @@ namespace CodeStar.API.Controllers
                 {
                     return BadRequest(Result<bool>.FailureResult("کاربری برای حدف یافت نشد  !"));
                 }
-                var res = _user.DeleteUser(Id);
+                var res =await _user.DeleteUser(Id);
 
                 return Ok(Result<bool>.SuccessResult(true, "کاربر با موفقیت حذف شد"));
             }
@@ -90,7 +90,7 @@ namespace CodeStar.API.Controllers
                 return StatusCode(500, Result<bool>.FailureResult("خطای سرور", new List<string> { ex.Message }));
             }
 
-        }
+         }
         //[HttpGet("{Id}")]
         //public async Task<IActionResult> GetUserDetail(int Id)
         //{

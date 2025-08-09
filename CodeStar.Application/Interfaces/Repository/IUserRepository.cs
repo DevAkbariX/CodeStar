@@ -13,8 +13,8 @@ namespace CodeStar.Application.Interfaces.Repository
     {
         public Task<Result<bool>> InsertAsync(User user);
         public Task<Result<bool>> UpdateAsync(User user);
-        public Task<User?> GetByIdAsync(int id);
-        public Task<Result<bool>> DeleteAsync(int id);
+        public Task<User?> GetByIdAsync(long id);
+        public Task<Result<bool>> DeleteAsync(long id);
 
         Task<User?> GetByEmailAsync(string email);
     }

@@ -20,10 +20,23 @@ namespace CodeStar.Infrastructure.Repository
             _dbSet = _context.Set<T>();
         }
 
+  
+
         public async Task<T> GetByIdAsync(long id)
         {
-            return await _dbSet.FindAsync(id);
+            try
+            {
+
+              return await _dbSet.FindAsync(id);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Exception: " + ex.Message);
+                throw;
+            }
         }
+
+
 
         public async Task<IEnumerable<T>> GetAllAsync()
         {

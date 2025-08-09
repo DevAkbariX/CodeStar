@@ -28,7 +28,7 @@ namespace CodeStar.Infrastructure.Repository
         {
             try
             {
-                var result = _context.Users.Where(c => c.Email == email).FirstOrDefault();
+                var result =await _context.Users.Where(c => c.Email == email).FirstOrDefaultAsync();
                 return  result;
             }
             catch(Exception ex)
@@ -37,11 +37,11 @@ namespace CodeStar.Infrastructure.Repository
             }
         }
 
-        public async Task<User?> GetByIdAsync(int id)
+        public async Task<User?> GetByIdAsync(long id)
         {
             try
             {
-                var result = _context.Users.Where(c => c.Id == id).FirstOrDefault();
+                var result = await _repository.GetByIdAsync(id);
                 return result;
             }
             catch (Exception ex)
@@ -49,6 +49,9 @@ namespace CodeStar.Infrastructure.Repository
                 return null;
             }
         }
+
+
+
 
         public async Task<Result<bool>> InsertAsync(User user)
         {
@@ -76,11 +79,10 @@ namespace CodeStar.Infrastructure.Repository
             }
         }
 
-         async Task<Result<bool>> IUserRepository.DeleteAsync(int id)
+         async Task<Result<bool>> IUserRepository.DeleteAsync(long id)
         {
             try
             {
-                var result = _context.Users.Where(c => c.Id == id).FirstOrDefault();
                 await _repository.DeleteAsync(id);
                 return Result<bool>.SuccessResult(true, "User deleted successfully");
             }

@@ -42,16 +42,12 @@ namespace CodeStar.Application.Services
             return Result<bool>.SuccessResult(true, "ایمیل تأیید شد");
         }
 
-        public async Task<Result<bool>> DeleteUser(int Id)
+        public async Task<Result<bool>> DeleteUser(long Id)
         {
             try
             {
                 if (Id <= 0)
                     return Result<bool>.FailureResult(" نامعتبر .");
-
-                var user = await _repository.GetByIdAsync(Id);
-                if (user == null)
-                    return Result<bool>.FailureResult("کاربر یافت نشد.");
 
                 var result = await _repository.DeleteAsync(Id);
 
