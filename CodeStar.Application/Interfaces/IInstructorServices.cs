@@ -1,4 +1,5 @@
-﻿using CodeStar.Application.DTOs.Instructor;
+﻿using CodeStar.Application.Common;
+using CodeStar.Application.DTOs.Instructor;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,5 +11,8 @@ namespace CodeStar.Application.Interfaces
     public interface IInstructorServices
     {
         Task<InstructorDetailDTO> GetInstructorDetail(long id);
+        Task<Result<bool>> InstructorInserts(InstructorInsertDTO dTO);
+        Task<Result<bool>> ConfirmEmailAsync(string email, string token);
+        Task<Result<bool>> SendEmailConfirmationAsync(string email);
     }
 }
