@@ -1,9 +1,11 @@
 
+using AutoMapper;
 using CodeStar.API.DI;
 using CodeStar.Application.Interfaces;
 using CodeStar.Infrastructure.Data;
 using CodeStar.Infrastructure.Repository;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 
 namespace CodeStar.API
 {
@@ -31,6 +33,11 @@ namespace CodeStar.API
             sqlOptions => sqlOptions.CommandTimeout(60)));
 
             #region DI
+
+            builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
+
+
+            builder.Services.AddAutoMapper(typeof(CodeStar.Application.Common.Mappings.MappingProfile));
             builder.Services.AddDependency();
             #endregion
 
