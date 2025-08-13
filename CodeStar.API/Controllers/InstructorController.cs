@@ -15,6 +15,7 @@ namespace CodeStar.API.Controllers
         public IActionResult Index()
         {
             return View();
+
         }
         [HttpGet("{id}")]
         public async Task<IActionResult> GetInstructorDetail(long id)
