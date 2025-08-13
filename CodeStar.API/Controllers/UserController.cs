@@ -2,6 +2,7 @@
 using CodeStar.Application.DTOs.User;
 using CodeStar.Application.Interfaces;
 using CodeStar.Application.Interfaces.Repository;
+using CodeStar.Domain.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -46,5 +47,25 @@ namespace CodeStar.API.Controllers
                 return StatusCode(500, Result<bool>.FailureResult("خطای سرور", new List<string> { ex.Message }));
             }
         }
+        [HttpDelete("{Id}")]
+        public async Task<IActionResult> DeleteUser(long Id)
+        {
+            try
+            {
+                if (Id == null)
+                {
+                    return BadRequest(Result<bool>.FailureResult("کاربری برای حدف یافت نشد  !"));
+                }
+                var res =await _user.DeleteUser(Id);
+
+                return Ok(Result<bool>.SuccessResult(true, "کاربر با موفقیت حذف شد"));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, Result<bool>.FailureResult("خطای سرور", new List<string> { ex.Message }));
+            }
+        }
+
+
     }
 }

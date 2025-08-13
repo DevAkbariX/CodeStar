@@ -1,9 +1,11 @@
 
+using AutoMapper;
 using CodeStar.API.DI;
 using CodeStar.Application.Interfaces;
 using CodeStar.Infrastructure.Data;
 using CodeStar.Infrastructure.Repository;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 
 namespace CodeStar.API
 {
@@ -20,10 +22,22 @@ namespace CodeStar.API
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            //builder.Services.AddDbContext<CodeStarDbContext>(options =>
+            //options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
+
+            //);
+
             builder.Services.AddDbContext<CodeStarDbContext>(options =>
-                    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+            options.UseSqlServer(
+            builder.Configuration.GetConnectionString("DefaultConnection"),
+            sqlOptions => sqlOptions.CommandTimeout(60)));
 
             #region DI
+
+            builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
+
+
+            builder.Services.AddAutoMapper(typeof(CodeStar.Application.Common.Mappings.MappingProfile));
             builder.Services.AddDependency();
             #endregion
 

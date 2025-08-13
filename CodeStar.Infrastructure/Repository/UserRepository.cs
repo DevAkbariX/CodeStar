@@ -28,7 +28,7 @@ namespace CodeStar.Infrastructure.Repository
         {
             try
             {
-                var result = _context.Users.Where(c => c.Email == email).FirstOrDefault();
+                var result =await _context.Users.Where(c => c.Email == email).FirstOrDefaultAsync();
                 return  result;
             }
             catch(Exception ex)
@@ -36,6 +36,20 @@ namespace CodeStar.Infrastructure.Repository
                 return null;
             }
         }
+
+        public async Task<User?> GetByIdAsync(long id)
+        {
+            try
+            {
+                var result = await _repository.GetByIdAsync(id);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
         public async Task<Result<bool>> InsertAsync(User user)
         {
             try
@@ -59,6 +73,19 @@ namespace CodeStar.Infrastructure.Repository
             catch(Exception ex )
             {
                 return  Result<bool>.FailureResult("Failed to Update user", new List<string> { ex.Message });
+            }
+        }
+
+         async Task<Result<bool>> IUserRepository.DeleteAsync(long id)
+        {
+            try
+            {
+                await _repository.DeleteAsync(id);
+                return Result<bool>.SuccessResult(true, "User deleted successfully");
+            }
+            catch (Exception ex)
+            {
+                return null;
             }
         }
     }

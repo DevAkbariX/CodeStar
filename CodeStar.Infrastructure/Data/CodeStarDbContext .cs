@@ -23,6 +23,11 @@ namespace CodeStar.Infrastructure.Data
         public DbSet<Role> Roles { get; set; }
         public DbSet<InstructorMedia> InstructorMedia { get; set; }
         public DbSet<Instructor> Instructors { get; set; }
+        public DbSet<Tag> Tags { get; set; }    
+        public DbSet<SkillSpark> SkillSpark { get; set; }
+        public DbSet<SkillQuestion> SkillQuestion { get; set; }
+        public DbSet<SkillSparkTag> skillSparkTags { get; set; }
+        public DbSet<SkillEpisode> SkillEpisode { get; set; }
 
         //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         //{
@@ -42,6 +47,10 @@ namespace CodeStar.Infrastructure.Data
             modelBuilder.ApplyConfiguration(new InstructorConfiguration());
             modelBuilder.ApplyConfiguration(new InstructorResumeConfiguration());
             modelBuilder.ApplyConfiguration(new InstructorCertificationConfiguration());
+            modelBuilder.ApplyConfiguration(new SkillEpisodeConfiguration());
+            modelBuilder.ApplyConfiguration(new SkillQuestionConfiguration());
+            modelBuilder.ApplyConfiguration(new SkillSparkConfiguration());
+            modelBuilder.ApplyConfiguration(new SkillSparkTagConfiguration());
 
         }
     }

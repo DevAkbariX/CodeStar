@@ -12,7 +12,10 @@ namespace CodeStar.Application.Interfaces.Repository
     public interface IUserRepository
     {
         public Task<Result<bool>> InsertAsync(User user);
-        Task<Result<bool>> UpdateAsync(User user);
+        public Task<Result<bool>> UpdateAsync(User user);
+        public Task<User?> GetByIdAsync(long id);
+        public Task<Result<bool>> DeleteAsync(long id);
+
         Task<User?> GetByEmailAsync(string email);
     }
 }

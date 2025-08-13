@@ -4,6 +4,7 @@ using CodeStar.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CodeStar.Infrastructure.Migrations
 {
     [DbContext(typeof(CodeStarDbContext))]
-    partial class CodeStarDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250808124821_InsertSkillSparkTable")]
+    partial class InsertSkillSparkTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -475,8 +478,6 @@ namespace CodeStar.Infrastructure.Migrations
 
                     b.HasIndex("SkillSparkId");
 
-                    b.HasIndex("UserId");
-
                     b.ToTable("SkillQuestion");
                 });
 
@@ -590,17 +591,9 @@ namespace CodeStar.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CodeStar.Domain.Entities.User", "User")
-                        .WithMany("SkillQuestions")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("ParentQuestion");
 
                     b.Navigation("SkillSpark");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("CodeStar.Domain.Entities.Instructor", b =>
@@ -636,11 +629,6 @@ namespace CodeStar.Infrastructure.Migrations
             modelBuilder.Entity("CodeStar.Domain.Entities.Tag", b =>
                 {
                     b.Navigation("SkillSparkTags");
-                });
-
-            modelBuilder.Entity("CodeStar.Domain.Entities.User", b =>
-                {
-                    b.Navigation("SkillQuestions");
                 });
 
             modelBuilder.Entity("SkillQuestion", b =>
