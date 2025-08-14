@@ -42,31 +42,6 @@ namespace CodeStar.Application.Services
             return Result<bool>.SuccessResult(true, "ایمیل تأیید شد");
         }
 
-        public async Task<Result<bool>> DeleteUser(long Id)
-        {
-            try
-            {
-                if (Id <= 0)
-                    return Result<bool>.FailureResult(" نامعتبر .");
-
-                var result = await _repository.DeleteAsync(Id);
-
-                if (!result.Success)
-                    return Result<bool>.FailureResult(result.Message, result.Errors);
-
-                return Result<bool>.SuccessResult(true, "کاربر با موفقیت حذف شد.");
-            }
-            catch (Exception ex)
-            {
-                return Result<bool>.FailureResult("خطای سرور: " + ex.Message);
-            }
-        }
-
-        //public Task<Result<GetUserDetailDTO>> GetUserDetail(int Id)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
         public async Task<Result<bool>> SendEmailConfirmationAsync(string email)
         {
             var userResult = await _repository.GetByEmailAsync(email);

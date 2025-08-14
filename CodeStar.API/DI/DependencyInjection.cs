@@ -16,6 +16,9 @@ namespace CodeStar.API.DI
             services.AddScoped<IinstructorRequestService, instructorRequestService>();
             services.AddScoped<IinstructorRequestRepository, InstructorRequestRepository>();
             services.AddScoped<IEmailSender, GmailEmailSender>();
+            services.AddScoped<IInstructorRepository, InstructorRepository>();
+            services.AddScoped<IInstructorServices, InstructorServices>();
+
             services.AddScoped<IAuthorizationService, AuthorizationService>();
             return services;
         }

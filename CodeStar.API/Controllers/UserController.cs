@@ -145,6 +145,3 @@ namespace CodeStar.API.Controllers
         public string Password { get; set; }
     }
 }
-
-
-
