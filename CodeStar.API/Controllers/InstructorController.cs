@@ -35,5 +35,23 @@ namespace CodeStar.API.Controllers
                 return StatusCode(500, Result<bool>.FailureResult("خطای سرور", new List<string> { ex.Message }));
             }
         }
+
+        [HttpPost("{Reject}")]
+        public async Task<IActionResult> RejectInstructor(long id , string RejectionReason)
+        {
+            try
+            {
+                var result = await _instructor.RejectInstructor(id, RejectionReason);
+                if (result != null)
+                {
+                    return Ok(result);
+                }
+                return NotFound();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, Result<bool>.FailureResult("خطای سرور", new List<string> { ex.Message }));
+            }
+        }
     }
 }

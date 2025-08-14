@@ -10,5 +10,6 @@ namespace CodeStar.Application.Interfaces.Repository
     public interface IInstructorRepository
     {
         public Task<InstructorDetailDTO> GetInstructorDetail(long id);
+        public Task<bool> RejectInstructor(long id , string RejectionReason , long AdminId);
     }
 }

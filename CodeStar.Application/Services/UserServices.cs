@@ -42,6 +42,11 @@ namespace CodeStar.Application.Services
             return Result<bool>.SuccessResult(true, "ایمیل تأیید شد");
         }
 
+        public Task<Result<bool>> DeleteUser(long Id)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<Result<bool>> SendEmailConfirmationAsync(string email)
         {
             var userResult = await _repository.GetByEmailAsync(email);
