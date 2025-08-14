@@ -1,4 +1,5 @@
-﻿using CodeStar.Application.Common;
+﻿using CodeStar.API.Security;
+using CodeStar.Application.Common;
 using CodeStar.Application.Interfaces;
 using CodeStar.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
@@ -36,6 +37,7 @@ namespace CodeStar.API.Controllers
             }
         }
 
+        [AuthorizePermission("RejectInstructor")]
         [HttpPost("{Reject}")]
         public async Task<IActionResult> RejectInstructor(long id , string RejectionReason)
         {
