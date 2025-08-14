@@ -1,11 +1,18 @@
-﻿using CodeStar.Application.Common;
+﻿using CodeStar.API.Security;
+using CodeStar.Application.Common;
 using CodeStar.Application.DTOs.User;
 using CodeStar.Application.Interfaces;
 using CodeStar.Application.Interfaces.Repository;
+using CodeStar.Application.Utilities;
 using CodeStar.Domain.Entities;
+using CodeStar.Infrastructure.Data;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace CodeStar.API.Controllers
 {
@@ -15,11 +22,15 @@ namespace CodeStar.API.Controllers
     {
         IUserServices _user;
         IinstructorRequestService _Ireq;
-        public UserController(IUserServices user, IinstructorRequestService Ireq)
+        private readonly CodeStarDbContext _db;
+        public UserController(IUserServices user, IinstructorRequestService Ireq,CodeStarDbContext db)
         {
             _user = user;
             _Ireq = Ireq;
+            _db = db;
         }
+
+        [AuthorizePermission("InsertUser")]
         [HttpPost]
         public async Task<IActionResult> InsertUser(UserInsertDTO dTO)
         {
@@ -91,32 +102,48 @@ namespace CodeStar.API.Controllers
             }
 
          }
-        //[HttpGet("{Id}")]
-        //public async Task<IActionResult> GetUserDetail(int Id)
-        //{
-        //    try
-        //    {
-        //        if (Id <= 0)
-        //        {
-        //            return BadRequest(Result<GetUserDetailDTO>.FailureResult("شناسه نامعتبر است!"));
-        //        }
 
-        //        var res = await _user.GetUserDetail(Id);  
 
-        //        if (!res.Success)
-        //        {
-        //            return NotFound(Result<GetUserDetailDTO>.FailureResult(res.Message, res.Errors));
-        //        }
 
-        //        return Ok(Result<GetUserDetailDTO>.SuccessResult(res.Data, "اطلاعات کاربر با موفقیت بازیابی شد"));
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return StatusCode(500, Result<GetUserDetailDTO>.FailureResult("خطای سرور", new List<string> { ex.Message }));
-        //    }
-        //}
+        [HttpPost("login")]
+        public IActionResult Login([FromBody] LoginDto dto)
+        {
+
+            var user = _db.Users.FirstOrDefault(u => u.UserName == dto.UserName);
+            if (user == null) return Unauthorized("Invalid credentials");
+
+            
+            bool isPasswordValid = AuthHelper.VerifyPassword(dto.Password, user.Password);
+            if (!isPasswordValid) return Unauthorized("Invalid credentials");
+
+            var claims = new[]
+            {
+            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new Claim(ClaimTypes.Name, user.UserName)
+            };
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("SuperSecretKeyForJwtTesting1234"));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var token = new JwtSecurityToken(
+                claims: claims,
+                expires: DateTime.Now.AddHours(1),
+                signingCredentials: creds);
+
+            return Ok(new
+            {
+                token = new JwtSecurityTokenHandler().WriteToken(token)
+            });
+        }
+
+        
     }
 
+    public class LoginDto
+    {
+        public string UserName { get; set; }
+        public string Password { get; set; }
+    }
 }
 
 

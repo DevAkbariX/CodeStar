@@ -21,6 +21,20 @@ namespace CodeStar.Infrastructure.Configurations
                 .IsRequired()
                 .HasMaxLength(100);
 
+            builder.HasMany(r => r.Users)
+               .WithOne(u => u.Role)
+               .HasForeignKey(u => u.Fk_RoleId)
+               .IsRequired();
+
+            builder.HasMany(r => r.Instructor)
+               .WithOne(i => i.Role)
+               .HasForeignKey(i => i.Fk_RoleId)
+               .IsRequired();
+
+            builder.HasMany(r => r.RolePermissions)
+            .WithOne(rp => rp.Role)
+            .HasForeignKey(rp => rp.RoleId);
+
             builder.HasData(
             new Role { Id = 1, Title = "Admin", PersionTitle = "مدیر سیستم", IsActived = true },
             new Role { Id = 2, Title = "User", PersionTitle = "کاربر عادی", IsActived = true },

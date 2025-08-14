@@ -26,8 +26,10 @@ namespace CodeStar.Infrastructure.Data
         public DbSet<Tag> Tags { get; set; }    
         public DbSet<SkillSpark> SkillSpark { get; set; }
         public DbSet<SkillQuestion> SkillQuestion { get; set; }
-        public DbSet<SkillSparkTag> skillSparkTags { get; set; }
+        public DbSet<SkillSparkTag> SkillSparkTags { get; set; }
         public DbSet<SkillEpisode> SkillEpisode { get; set; }
+        public DbSet<RolePermission> RolePermissions { get; set; }
+        public DbSet<Permission> Permissions { get; set; }
 
         //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         //{
@@ -51,6 +53,8 @@ namespace CodeStar.Infrastructure.Data
             modelBuilder.ApplyConfiguration(new SkillQuestionConfiguration());
             modelBuilder.ApplyConfiguration(new SkillSparkConfiguration());
             modelBuilder.ApplyConfiguration(new SkillSparkTagConfiguration());
+            modelBuilder.ApplyConfiguration(new PermissionConfiguration());
+            modelBuilder.ApplyConfiguration(new RolePermissionConfiguration());
 
         }
     }
