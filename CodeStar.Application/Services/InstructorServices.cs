@@ -3,6 +3,7 @@ using CodeStar.Application.DTOs.Instructor;
 using CodeStar.Application.DTOs.User;
 using CodeStar.Application.Interfaces;
 using CodeStar.Application.Interfaces.Repository;
+using CodeStar.Application.Utilities;
 using CodeStar.Domain.Entities;
 using CodeStar.Infrastructure.Utilities;
 using Microsoft.AspNetCore.Http;
@@ -20,7 +21,7 @@ namespace CodeStar.Application.Services
         IInstructorRepository _repository;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IEmailSender _email;
-        public InstructorServices(IHttpContextAccessor httpContextAccessor,IInstructorRepository repository, IEmailSender email)
+        public InstructorServices(IHttpContextAccessor httpContextAccessor, IInstructorRepository repository, IEmailSender email)
         {
             _repository = repository;
             _httpContextAccessor = httpContextAccessor;
@@ -63,6 +64,108 @@ namespace CodeStar.Application.Services
             {
                 return Result<bool>.FailureResult("خطای سرور: " + ex.Message);
             }
+        }
+        public async Task<Result<bool>> ApproveInstructor(long id)
+        {
+            try
+            {
+                var userIdClaim = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier);
+                if (userIdClaim == null)
+                    return Result<bool>.FailureResult("خطای سرور: " + "شما در سایت لاگین نیستید");
+
+                var adminId = long.Parse(userIdClaim.Value);
+
+                var result = await _repository.ApproveInstructor(id, adminId);
+                if (!result)
+                    return Result<bool>.FailureResult("خطای سرور: " + "مشکل در تغییر درخواست");
+                var instructor = await _repository.GetInstructorDetail(id);
+                var template = File.ReadAllText("Templates/ApproveInstructorTemplate.html");
+                var ApproveInstructor = "درخواست شما برای مدرس بودن در سایت CodeStar تایید شده است";
+                var body = template.Replace("{{ApproveInstructor}}", ApproveInstructor);
+                await _email.SendEmailAsync(instructor.Email, "تایید درخواست مدرس", body);
+
+                return Result<bool>.SuccessResult(true, "شما کاربر را برای مدرس بود تایید کردید");
+            }
+            catch (Exception ex)
+            {
+
+                return Result<bool>.FailureResult("خطای سرور: " + ex.Message);
+            }
+        }
+
+        public async Task<Result<bool>> InsertInstructorAnyc(AddInstructorDTO dTO)
+        {
+            try
+            {
+                if (dTO == null)
+                    return Result<bool>.FailureResult("ورودی خالی یا اشتباه است");
+
+                var password = AuthHelper.HashPassword(dTO.Password);
+                var token = Guid.NewGuid().ToString();
+
+                var instructor = new Instructor()
+                {
+                    FullName = dTO.FullName,
+                    Email = dTO.Email.Trim().ToLower(),
+                    Mobile = dTO.Mobile,
+                    NationalCode = dTO.NationalCode,
+                    Password = password,
+                    UserName = dTO.UserName,
+                    InstructorProfileSummary = dTO.InstructorProfileSummary,
+                    HasPriorExperience = dTO.HasPriorExperience,
+                    YearsOfExperience = dTO.YearsOfExperience,
+                    EmailConfirmationToken = token,
+                    IsEmailConfirmed = false,
+                    Fk_RoleId = 4,
+
+                };
+                return await _repository.InsertInstructor(instructor);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public async Task<Result<bool>> ConfirmEmailAsync(string email, string token)
+        {
+            var instructor = await _repository.GetByEmail(email);
+
+            if (instructor == null || instructor.EmailConfirmationToken != token)
+                return Result<bool>.FailureResult("توکن یا ایمیل نامعتبر است");
+
+            if (instructor.EmailTokenExpiration < DateTime.UtcNow)
+                return Result<bool>.FailureResult("توکن منقضی شده است");
+
+            instructor.IsEmailConfirmed = true;
+            instructor.EmailConfirmationToken = null;
+            instructor.EmailTokenExpiration = null;
+
+            await _repository.UpdateInstructor(instructor);
+
+            return Result<bool>.SuccessResult(true, "ایمیل تأیید شد");
+        }
+
+        public async Task<Result<bool>> SendEmailConfirmationAsync(string email)
+        {
+            var instructorResult = await _repository.GetByEmail(email);
+            if (instructorResult == null)
+                return Result<bool>.FailureResult("کاربری با این ایمیل یافت نشد");
+
+            var instructor = instructorResult;
+
+            if (instructor.IsEmailConfirmed)
+                return Result<bool>.FailureResult("ایمیل قبلاً تأیید شده است");
+
+            var template = File.ReadAllText("Templates/ConfirmEmailTemplateResume.html");
+            var verifyLink = $"https://localhost:7013/api/Instructor/confirm-email?token={instructor.EmailConfirmationToken}&email={instructor.Email}";
+            var body = template.Replace("{{ConfirmLink}}", verifyLink);
+
+
+            await _email.SendEmailAsync(instructor.Email, "تأیید ایمیل", body);
+
+            return Result<bool>.SuccessResult(true, "لینک تأیید به ایمیل شما ارسال شد.");
         }
     }
 }
