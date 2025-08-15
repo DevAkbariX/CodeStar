@@ -26,6 +26,7 @@ namespace CodeStar.Domain.Entities
         public ICollection<SkillSparkTag> SkillSparkTags { get; set; }
         public ICollection<SkillEpisode> Episodes { get; set; }
         public ICollection<SkillQuestion> SkillQuestions { get; set; }
+        public ICollection<SkillCategory> SkillCategorys { get; set; }
         #endregion
     }
 }

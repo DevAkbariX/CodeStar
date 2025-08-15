@@ -76,11 +76,12 @@ namespace CodeStar.API
 
             #region DI
 
-            builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
-            builder.Services.AddHttpContextAccessor();
-
+         
+          
 
             builder.Services.AddAutoMapper(typeof(CodeStar.Application.Common.Mappings.MappingProfile));
+            builder.Services.AddHttpContextAccessor();
+
             builder.Services.AddDependency();
             #endregion
 

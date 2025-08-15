@@ -18,6 +18,8 @@ namespace CodeStar.API.DI
             services.AddScoped<IEmailSender, GmailEmailSender>();
             services.AddScoped<IInstructorRepository, InstructorRepository>();
             services.AddScoped<IInstructorServices, InstructorServices>();
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<ICategoryService, CategoryService>();
 
             services.AddScoped<IAuthorizationService, AuthorizationService>();
             return services;

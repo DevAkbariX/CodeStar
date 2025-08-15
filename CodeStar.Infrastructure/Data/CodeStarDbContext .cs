@@ -30,6 +30,8 @@ namespace CodeStar.Infrastructure.Data
         public DbSet<SkillEpisode> SkillEpisode { get; set; }
         public DbSet<RolePermission> RolePermissions { get; set; }
         public DbSet<Permission> Permissions { get; set; }
+        public DbSet<Category> Category { get; set; }
+        public DbSet<SkillCategory> SkillCategories { get; set; }
 
         //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         //{
@@ -55,6 +57,7 @@ namespace CodeStar.Infrastructure.Data
             modelBuilder.ApplyConfiguration(new SkillSparkTagConfiguration());
             modelBuilder.ApplyConfiguration(new PermissionConfiguration());
             modelBuilder.ApplyConfiguration(new RolePermissionConfiguration());
+            modelBuilder.ApplyConfiguration(new SkillCategoryConfiguration());
 
         }
     }
