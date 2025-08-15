@@ -79,5 +79,22 @@ namespace CodeStar.API.Controllers
                 return StatusCode(500, Result<bool>.FailureResult("خطای سرور", new List<string> { ex.Message }));
             }
         }
+        [AuthorizePermission("ApproveInstructor")]
+        [HttpGet("approve/{id}")]
+        public async Task<IActionResult> ApproveInstructor(long id)
+        {
+            try
+            {
+                var result = await _instructor.ApproveInstructor(id);
+                if (result != null)
+                    return Ok();
+                return NotFound();
+            }
+            catch (Exception ex)
+            {
+
+                return StatusCode(500, Result<bool>.FailureResult("خطای سرور", new List<string> { ex.Message }));
+            }
+        }
     }
 }

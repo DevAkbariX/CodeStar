@@ -16,5 +16,6 @@ namespace CodeStar.Application.Interfaces
         Task<Result<bool>> InsertInstructorAnyc(AddInstructorDTO dTO);
         public Task<Result<bool>> ConfirmEmailAsync(string email, string token);
         public Task<Result<bool>> SendEmailConfirmationAsync(string email);
+        Task<Result<bool>> ApproveInstructor(long id);
     }
 }

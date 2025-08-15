@@ -65,6 +65,33 @@ namespace CodeStar.Application.Services
                 return Result<bool>.FailureResult("خطای سرور: " + ex.Message);
             }
         }
+        public async Task<Result<bool>> ApproveInstructor(long id)
+        {
+            try
+            {
+                var userIdClaim = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier);
+                if (userIdClaim == null)
+                    return Result<bool>.FailureResult("خطای سرور: " + "شما در سایت لاگین نیستید");
+
+                var adminId = long.Parse(userIdClaim.Value);
+
+                var result = await _repository.ApproveInstructor(id, adminId);
+                if (!result)
+                    return Result<bool>.FailureResult("خطای سرور: " + "مشکل در تغییر درخواست");
+                var instructor = await _repository.GetInstructorDetail(id);
+                var template = File.ReadAllText("Templates/ApproveInstructorTemplate.html");
+                var ApproveInstructor = "درخواست شما برای مدرس بودن در سایت CodeStar تایید شده است";
+                var body = template.Replace("{{ApproveInstructor}}", ApproveInstructor);
+                await _email.SendEmailAsync(instructor.Email, "تایید درخواست مدرس", body);
+
+                return Result<bool>.SuccessResult(true, "شما کاربر را برای مدرس بود تایید کردید");
+            }
+            catch (Exception ex)
+            {
+
+                return Result<bool>.FailureResult("خطای سرور: " + ex.Message);
+            }
+        }
 
         public async Task<Result<bool>> InsertInstructorAnyc(AddInstructorDTO dTO)
         {
@@ -78,7 +105,7 @@ namespace CodeStar.Application.Services
 
                 var instructor = new Instructor()
                 {
-                    FullName=dTO.FullName,
+                    FullName = dTO.FullName,
                     Email = dTO.Email.Trim().ToLower(),
                     Mobile = dTO.Mobile,
                     NationalCode = dTO.NationalCode,
@@ -89,8 +116,8 @@ namespace CodeStar.Application.Services
                     YearsOfExperience = dTO.YearsOfExperience,
                     EmailConfirmationToken = token,
                     IsEmailConfirmed = false,
-                    Fk_RoleId=4,
-                    
+                    Fk_RoleId = 4,
+
                 };
                 return await _repository.InsertInstructor(instructor);
             }

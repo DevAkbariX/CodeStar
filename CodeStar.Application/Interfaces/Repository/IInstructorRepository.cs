@@ -16,5 +16,6 @@ namespace CodeStar.Application.Interfaces.Repository
         Task<Result<bool>> InsertInstructor(Instructor instructor);
         Task<Instructor> GetByEmail(string email);
         Task<Result<bool>> UpdateInstructor(Instructor instructor);
+        Task<bool> ApproveInstructor(long id,long AdminId);
     }
 }

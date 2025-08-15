@@ -23,6 +23,26 @@ namespace CodeStar.Infrastructure.Repository
             _repository = repository;
         }
 
+        public async Task<bool> ApproveInstructor(long id, long AdminId)
+        {
+            try
+            {
+                var user = await _repository.GetByIdAsync(id);
+                if (user == null)
+                    return false;
+                user.ProcessedByAdminId = (int?)AdminId;
+                user.ProcessedAt = DateTime.Now;
+                user.Status = RequestStatusEnum.Approved;
+                await _repository.UpdateAsync(user);
+                return true;
+            }
+            catch (Exception)
+            {
+
+                return false;
+            }
+        }
+
         public async Task<Instructor> GetByEmail(string email)
         {
             try
