@@ -17,11 +17,26 @@ namespace CodeStar.Infrastructure.Repository
     {
         private readonly CodeStarDbContext _context;
         private readonly IRepository<Instructor> _repository;
-        public InstructorRepository(CodeStarDbContext context , IRepository<Instructor> repository)
+        public InstructorRepository(CodeStarDbContext context, IRepository<Instructor> repository)
         {
             _context = context;
             _repository = repository;
         }
+
+        public async Task<Instructor> GetByEmail(string email)
+        {
+            try
+            {
+                var result = await _context.Instructors.Where(i=>i.Email==email).FirstOrDefaultAsync();
+                return result;
+            }
+            catch (Exception)
+            {
+
+                return null;
+            }
+        }
+
         public async Task<InstructorDetailDTO> GetInstructorDetail(long id)
         {
             var instructor = await _context.Instructors
@@ -54,13 +69,28 @@ namespace CodeStar.Infrastructure.Repository
             return instructor;
         }
 
+        public async Task<Result<bool>> InsertInstructor(Instructor instructor)
+        {
+            try
+            {
+                await _repository.AddAsync(instructor);
+                return Result<bool>.SuccessResult(true, "Success Added");
+
+            }
+            catch (Exception ex)
+            {
+
+                return Result<bool>.FailureResult("Failed to add instructor", new List<string> { ex.Message });
+            }
+        }
+
         public async Task<bool> RejectInstructor(long id, string RejectionReason, long AdminId)
         {
             try
             {
 
                 var user = await _repository.GetByIdAsync(id);
-                if(user == null)
+                if (user == null)
                 {
                     return false;
                 }
@@ -73,9 +103,23 @@ namespace CodeStar.Infrastructure.Repository
                 return true;
 
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return false;
+            }
+        }
+
+        public async Task<Result<bool>> UpdateInstructor(Instructor instructor)
+        {
+            try
+            {
+                 await _repository.UpdateAsync(instructor);
+                return Result<bool>.SuccessResult(true, "باموفقیت بروز رسانی شد");
+            }
+            catch (Exception ex)
+            {
+
+                return Result<bool>.FailureResult("Failed to Update user", new List<string> { ex.Message });
             }
         }
     }
